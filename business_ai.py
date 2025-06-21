@@ -1,46 +1,3 @@
-# BUSINESS SCIENCE UNIVERSITY
-# PYTHON FOR GENERATIVE AI COURSE
-# ML + AI BUSINESS INTELLIGENCE (FLOW CONTROL)
-# ***
-
-# CHALLENGE 3: CONNECT YOUR BUSINESS INTELLIGENCE COPILOT TO A NEW DATABASE
-
-# DIFFICULTY: BEGINNER
-
-# SPECIFIC ACTIONS:
-#  1. Allow the user to pass a SQL Connection URI through the Streamlit App (PATH_DB should be an input)
-#  2. See how to BI Copilot can be used on ANY database
-
-
-# streamlit run path_to_app
-
-# SAMPLE QUESTIONS:
-
-# what tables are in the database?
-
-# what do the first 5 rows of the bikes table look like?
-
-# Which table contains the transactions?
-
-# Show me the orderlines table
-
-# what does the bikeshop table look like?
-
-# Which table contains the products?
-
-# NOTE: Used gpt-4o for these...
-
-# What are the total sales per year-month? Make sure to calculate a total price by multiplying the bike price by the quantity. Make a chart of sales over time.
-
-# What is the sales by year-month for just Road bicycles. Make sure to calculate a total price by multiplying the bike price by the quantity. Make a chart of sales over time.
-
-# Create a map plot of sales by US state. Make sure to calculate a total price by multiplying the bike price by the quantity.
-
-
-
-
-# Imports
-
 import streamlit as st
 import plotly.express as px
 
@@ -79,9 +36,6 @@ os.environ["OPENAI_API_KEY"] = yaml.safe_load(open('../credentials.yml'))['opena
 
 MODEL_LIST = ['gpt-4o-mini', 'gpt-4o']
 DB_LIST = {"Test Database": "sqlite:///{####Enter path to any database on your computer####}", "Test Database 2": "sqlite:///{####You can add multiple by appending to dictionary####}"}
-
-
-# HELPER FUNCTIONS
 
 def extract_sql_code(text):
     sql_code_match = re.search(r'```sql(.*?)```', text, re.DOTALL)
@@ -126,12 +80,6 @@ except Exception as e:
     print("Unable to access db: ", PATH_DB)
 
 
-
-
-
-
-# * model selection
-
 model_option = st.sidebar.selectbox(
     "Choose OpenAI model",
     MODEL_LIST,
@@ -143,9 +91,6 @@ OPENAI_LLM = ChatOpenAI(
 )
 
 llm = OPENAI_LLM
-
-
-# * Routing Preprocessor Agent
 
 routing_preprocessor_prompt = PromptTemplate(
     template="""
@@ -306,7 +251,6 @@ tools = [python_repl]
 chart_generator = prompt_chart_generator.partial(tool_names=", ".join([tool.name for tool in tools])) | llm.bind_tools(tools)
 
 
-# * LANGGRAPH
 class GraphState(TypedDict):
     """
     Represents the state of our graph.
@@ -452,10 +396,6 @@ workflow.add_edge("state_printer", END)
 
 app = workflow.compile()
 
-# * STREAMLIT 
-
-
-# Set up memory
 msgs = StreamlitChatMessageHistory(key="langchain_messages")
 if len(msgs.messages) == 0:
     msgs.add_ai_message("How can I help you?")
