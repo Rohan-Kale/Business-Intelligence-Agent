@@ -56,16 +56,12 @@ def extract_sql_code(text):
 
 os.environ["OPENAI_API_KEY"] = yaml.safe_load(open('../credentials.yml'))['openai']
 
-# * STREAMLIT APP SETUP ----
-
 st.set_page_config(page_title="Your Business Intelligence AI Copilot")
 st.title("Your Business Intelligence AI Copilot")
 
 st.markdown("""
             I'm a handy business intelligence agent that connects up to the multiple SQLite databases. You can ask me Business Intelligence, Customer Analytics, and Data Visualization Questions. I will report the results. 
             """)
-
-# * NEW Database option
 
 db_option = st.sidebar.selectbox(
     "Select a Database",
@@ -181,8 +177,6 @@ prompt_chart_instructions = PromptTemplate(
 
 chart_instructor = prompt_chart_instructions | llm | StrOutputParser()
 
-
-# * Chart Generator
 
 repl = PythonREPL()
 
